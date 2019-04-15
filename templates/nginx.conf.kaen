@@ -1,0 +1,45 @@
+server {
+    client_max_body_size {{client_max_body_size}};
+    listen 80;
+    server_name {{host}} www.{{host}} {{subdomains}};
+	if ($server_name ~ {{host}}) {
+        return 301 https://www.{{host}}$request_uri;
+    }
+    if ($request_uri !~ well-known) {
+        return 301 https://$server_name$request_uri;
+    }{{webroot}}
+}
+/--split--/
+server {
+    listen 443 ssl {{http2}}
+    client_max_body_size {{client_max_body_size}};
+    {{ssl_certificate}};
+    {{ssl_certificate_key}};
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+    ssl_prefer_server_ciphers on;
+    {{ssl_dhparam}}
+    server_name www.{{host}} {{subdomains}};
+    if ($server_name ~ https://{{host}} ) {
+        return 301 https://www.{{host}}$request_uri;
+    }
+    location / {
+            proxy_pass https://127.0.0.1:{{port}};
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+/--split--/
+server {
+    listen 80;
+    client_max_body_size {{client_max_body_size}};
+    server_name {{host}} www.{{host}};
+    if ($server_name ~ http://{{host}}) {
+        return 301 http://www.{{host}}$request_uri;
+    }
+    location / {
+            proxy_pass http://127.0.0.1:{{port}};
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}

@@ -1,0 +1,10 @@
+class {{context}} extends VaultORM {
+}
+const Context = new {{context}}({
+    database: '{{database}}',
+    port: {{port}},
+    host: '{{host}}'
+}, {
+    poolSize: 2
+});
+export { Context, Context as {{context}} };

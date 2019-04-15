@@ -1,0 +1,9 @@
+**/*.d.ts
+**/*.js
+**/*.map
+!templates/**/*.js
+!**/.gitkeep
+*.tgz
+node_modules
+coverage
+*.srl

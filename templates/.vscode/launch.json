@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+      "type": "node",
+      "request": "launch",
+      "name": "kaen debug",
+      "runtimeArgs": [
+        "serve",
+        "-a",
+        "--debug",
+        "kaen:* kaen"
+      ],
+      "runtimeExecutable": "kn",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "node debug",
+      "console": "integratedTerminal",
+      "program": "${workspaceFolder}\\server.js",
+      "args": [],
+      "outFiles": [
+        "${workspaceFolder}//**/*.js"
+      ]
+    }
+  ]
+}

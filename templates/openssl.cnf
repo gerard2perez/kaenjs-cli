@@ -1,0 +1,15 @@
+[req]
+serial					= 1
+default_bits			= 2048
+default_md = sha256
+distinguished_name = req_distinguished_name
+prompt = no
+
+[req_distinguished_name]
+C						= {{c}}
+ST						= {{st}}
+L						= {{l}}
+O						= {{o}}
+OU						= {{ou}}
+CN						= {{rootWebsite}}
+emailAddress			= {{email}}

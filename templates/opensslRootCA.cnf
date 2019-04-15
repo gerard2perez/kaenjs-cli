@@ -1,0 +1,14 @@
+[req]
+serial					= 1
+default_bits			= 2048
+distinguished_name = req_distinguished_name
+prompt = no
+
+[req_distinguished_name]
+C						= MX
+ST						= GN
+L						= IRA
+O						= Kaen
+OU						= DVL
+CN						= Kaen Development Authority
+emailAddress			= kaen@bitsun.com.mx
