@@ -4,7 +4,7 @@ import { rawSpawn } from '@bitsun/mce/spawn';
 import { livereload } from './livereload';
 
 export function StartServer(args, opt) {
-	let argv = ['--respawn', '--all-deps', '--transpileOnly', '--prefer-ts', ...args];
+	let argv = ['--cache-directory', '--cache', '--respawn', '--all-deps', '--transpileOnly', '--prefer-ts', ...args];
 	// console.log(args.join(' '));
 	// console.log(argv.join(' '));
 	let program = cliPath('node_modules/.bin/ts-node-dev');
@@ -13,6 +13,8 @@ export function StartServer(args, opt) {
 	// console.log(program);
 	let server = rawSpawn(program, argv, {
 		env: {
+			PATH: process.env.PATH,
+			HOME:'',
 			KAENCLI: 'true',
 			DEBUG: opt.debug,
 			NODE_ENV: opt.env,
