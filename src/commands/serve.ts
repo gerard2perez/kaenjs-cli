@@ -30,7 +30,6 @@ function loadRoutes() {
 }
 async function registerHosts() {
 	loadRoutes();
-	console.log(0);
 	const {Router} = require(targetPath('node_modules/@kaenjs/router'));
 	const {host} = configuration.server;
 	let targets = Router.subdomains.map(s=>`${s}.${host}`);
@@ -50,11 +49,6 @@ async function registerHosts() {
 }
 async function registerProxy({key, cert}) {
 	loadRoutes();
-	console.log(1);
-	require(targetPath('node_modules/@kaenjs/router'));
-	console.log(2);
-	require(targetPath('node_modules/@kaenjs/router'));
-	console.log(3);
 	const {Router} = require(targetPath('node_modules/@kaenjs/router'));
 	let proxies = await (await redbird.get('proxy/')).data;
 	let source = `127.0.0.1:${configuration.server.port}`;
@@ -83,54 +77,7 @@ export async function action(program: string, opt: Parsed<typeof options>) {
 	if (opt.inspectBrk) args.push(`--inspect-brk=${opt.inspectBrk}`);
 	let file = program || 'server.ts';
 	args.push(`src/${file}`);
-	// await registerHosts();
-	// await registerProxy(configuration.server.https || {});
+	await registerHosts();
+	await registerProxy(configuration.server.https || {});
     StartServer(args, opt);
-    // if (opt.env === 'development') {
-    //     updateHostsFile();
-    // }
-    // if (opt.nginx) {
-    //     await nginx({ install: true, certbot: '' });
-    // }
-    // if ( opt.assets ) {
-    //     let watchers: { compiler: Compiler, bundle: string }[] = await resources({ env: opt.env, cache: true });
-    //     for (const { compiler } of watchers) {
-    //         compiler.watch({
-    //             aggregateTimeout: 300,
-    //             poll: undefined
-    //         }, (err, stats) => {
-    //             if (stats.hasErrors()) {
-    //                 console.log(stats.toString());
-    //             } else {
-    //                 if (existsSync(targetPath('public/css/.___ignore_me___'))) unlinkSync(targetPath('public/css/.___ignore_me___'));
-    //                 if (existsSync(targetPath('public/img/.___ignore_me___'))) unlinkSync(targetPath('public/img/.___ignore_me___'));
-    //                 let { assets } = stats.toJson();
-    //                 assets = assets.filter(a => a.emitted) as any[];
-    //                 for (const { name } of assets) {
-    //                     if (name === '.___ignore_me___') continue;
-    //                     let ext = extname(name);
-    //                     if (['.js', '.css'].includes(ext)) {
-    //                         livereload.build(name);
-    //                     } else {
-    //                         livereload.refresh(name);
-    //                     }
-    //                 }
-    //             }
-    //         });
-    //     }
-    //     let compiled_resources = [];
-    //     for (const [bundle] of iter(configuration.bundles)) {
-    //         compiled_resources.push(targetPath('public', extname(bundle).replace('.', ''), bundle));
-    //     }
-    //     watch(compiled_resources, {
-    //         awaitWriteFinish: {
-    //             stabilityThreshold: 700,
-    //             pollInterval: 100
-    //         },
-    //         ignoreInitial: true,
-    //     }).on('all', (event, file) => {
-    //         let bfile = basename(file);
-    //         livereload.refresh(bfile);
-    //     });
-    // }
 }
