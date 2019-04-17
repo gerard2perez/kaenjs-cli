@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
-import { bool, Parsed, text } from '@bitsun/mce';
-import { targetPath } from '@bitsun/mce/paths';
+import { bool, Parsed, text } from '@gerard2p/mce';
+import { targetPath } from '@gerard2p/mce/paths';
 import { buildConfiguration, persisConfiguration, restartNginx } from '../utilities/nginx';
 export let description = 'helps bind the server to nginx';
 export let options = {

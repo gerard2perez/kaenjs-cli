@@ -1,9 +1,9 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
-import { bool, list, numeric, Parsed, text } from '@bitsun/mce';
-import { ok } from '@bitsun/mce/console';
-import { cliPath, targetPath } from '@bitsun/mce/paths';
-import { render } from '@bitsun/mce/render';
-import { spinSpawn } from '@bitsun/mce/spawn';
+import { bool, list, numeric, Parsed, text } from '@gerard2p/mce';
+import { ok } from '@gerard2p/mce/console';
+import { cliPath, targetPath } from '@gerard2p/mce/paths';
+import { render } from '@gerard2p/mce/render';
+import { spinSpawn } from '@gerard2p/mce/spawn';
 import { configuration } from '../utilities/configurations';
 import { restartNginx } from '../utilities/nginx';
 export let description = 'Generates a local certificate to use https in your local machine';

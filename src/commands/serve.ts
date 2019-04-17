@@ -1,9 +1,9 @@
-import { bool, enumeration, numeric, Parsed, text } from '@bitsun/mce';
+import { bool, enumeration, numeric, Parsed, text } from '@gerard2p/mce';
 import { StartServer } from '../utilities/daemon';
 import axios from 'axios';
 import { configuration } from '../utilities/configurations';
-import { ok } from '@bitsun/mce/console';
-import { targetPath } from '@bitsun/mce/paths';
+import { ok } from '@gerard2p/mce/console';
+import { targetPath } from '@gerard2p/mce/paths';
 import { existsSync, readdirSync, statSync } from 'fs';
 export let description = 'Start the server in watch mode.\n      To lauch in production use "node server\n      [proram=server]"';
 export let args = '[program]';
@@ -33,6 +33,7 @@ async function registerHosts() {
 	const {Router} = require(targetPath('node_modules/@kaenjs/router'));
 	const {host} = configuration.server;
 	let targets = Router.subdomains.map(s=>`${s}.${host}`);
+	console.log(targets);
 	let hosts = (await redbird.get('hosts/')).data;
 	targets.push(host);
 	for(const target of targets) {
@@ -54,6 +55,7 @@ async function registerProxy({key, cert}) {
 	let source = `127.0.0.1:${configuration.server.port}`;
 	const {host} = configuration.server;
 	let targets = Router.subdomains.map(s=>`${s}.${host}`);
+	console.log(targets);
 	let options = undefined;
 	if(key && cert) {
 		source = `https://${source}`;
@@ -77,7 +79,9 @@ export async function action(program: string, opt: Parsed<typeof options>) {
 	if (opt.inspectBrk) args.push(`--inspect-brk=${opt.inspectBrk}`);
 	let file = program || 'server.ts';
 	args.push(`src/${file}`);
-	await registerHosts();
-	await registerProxy(configuration.server.https || {});
+	try{
+		await registerHosts();
+		await registerProxy(configuration.server.https || {});
+	}catch(ex) {}
     StartServer(args, opt);
 }

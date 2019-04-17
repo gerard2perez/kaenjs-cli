@@ -4,10 +4,10 @@ import chalk from 'chalk';
 //@ts-ignore
 import { deletedDiff, updatedDiff } from 'deep-object-diff';
 import { readdirSync, writeFileSync } from 'fs';
-import { ok, updateTextSpin } from '@bitsun/mce/console';
-import { bool, list, numeric, Parsed, text, verbose } from '@bitsun/mce';
-import { targetPath, cliPath } from '@bitsun/mce/paths';
-import { spin } from '@bitsun/mce/spinner';
+import { ok, updateTextSpin } from '@gerard2p/mce/console';
+import { bool, list, numeric, Parsed, text, verbose } from '@gerard2p/mce';
+import { targetPath, cliPath } from '@gerard2p/mce/paths';
+import { spin } from '@gerard2p/mce/spinner';
 import { configuration } from '../utilities/configurations';
 import { Languages } from '../utilities/languages';
 

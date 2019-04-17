@@ -1,10 +1,10 @@
 import chalk from "chalk";
 import { copyFileSync, mkdirSync } from "fs";
-import { error, ok } from '@bitsun/mce/console';
-import { bool, enumeration, Parsed } from '@bitsun/mce';
-import { render } from '@bitsun/mce/render';
-import { spawn } from '@bitsun/mce/spawn';
-import { spin } from '@bitsun/mce/spinner';
+import { error, ok } from '@gerard2p/mce/console';
+import { bool, enumeration, Parsed } from '@gerard2p/mce';
+import { render } from '@gerard2p/mce/render';
+import { spawn } from '@gerard2p/mce/spawn';
+import { spin } from '@gerard2p/mce/spinner';
 import { join } from "path";
 import { secret } from '../utilities/secret';
 

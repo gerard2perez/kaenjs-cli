@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { bool, collect, Parsed, text } from '@bitsun/mce';
-import { cliPath, targetPath } from '@bitsun/mce/paths';
-import { render } from '@bitsun/mce/render';
-import { created, updated } from '@bitsun/mce/utils';
+import { bool, collect, Parsed, text } from '@gerard2p/mce';
+import { cliPath, targetPath } from '@gerard2p/mce/paths';
+import { render } from '@gerard2p/mce/render';
+import { created, updated } from '@gerard2p/mce/utils';
 import { configuration } from '../utilities/configurations';
 import { inflector } from '../utilities/inflector';
 
@@ -61,7 +61,7 @@ export async function action(name:string, opt:Parsed<typeof options>) {
 	let ModelText = readFileSync(model_path, 'utf-8');
     let ContextText = readFileSync(context_path, 'utf-8');
     if ( /import \{ Model \} from 'vault\-orm\/adapters\/.*';/.exec(ModelText) === null) {
-        ModelText = ModelText.replace(/.*import(.*)types';\n/, `import$1types';\nimport { Model } from '@bitsun/vault-orm/adapters/${opt.driver}';\n`)
+        ModelText = ModelText.replace(/.*import(.*)types';\n/, `import$1types';\nimport { Model } from '@gerard2p/vault-orm/adapters/${opt.driver}';\n`)
     }
     for(let [property, kind] of fields) {
         let declregexp = new RegExp(`${property}:${kind}`);
@@ -105,7 +105,7 @@ export async function action(name:string, opt:Parsed<typeof options>) {
     }
     writeFileSync(model_path, ModelText);
     if ( /import.*VaultORM.*/.exec(ContextText) === null) {
-        ContextText = `import { VaultORM, Collection, RelationMode, collection } from '@bitsun/vault-orm/adapters/${opt.driver}';\n` + ContextText;
+        ContextText = `import { VaultORM, Collection, RelationMode, collection } from '@gerard2p/vault-orm/adapters/${opt.driver}';\n` + ContextText;
     }
     if ( new RegExp(`import.*${cname}.*`).exec(ContextText) === null) {
         ContextText = ContextText.replace(new RegExp(`import(.*)VaultORM(.*)\n`), `import$1VaultORM$2\nimport { ${cname} } from './${name.toLowerCase()}';\n`);

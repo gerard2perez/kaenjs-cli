@@ -2,7 +2,7 @@ import * as livereload_server from 'livereload';
 import { configuration } from './configurations';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { cliPath } from '@bitsun/mce/paths';
+import { cliPath } from '@gerard2p/mce/paths';
 // function initialize
 class Livereload {
 	private _server: { refresh(filepath: string): void; alert(data: any): void };

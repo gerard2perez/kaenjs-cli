@@ -1,9 +1,9 @@
 import { fail } from 'assert';
 import { existsSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'fs';
-import { ok } from '@bitsun/mce/console';
-import { bool, enumeration, Parsed } from '@bitsun/mce';
-import { targetPath, cliPath } from '@bitsun/mce/paths';
-import { spin } from '@bitsun/mce/spinner';
+import { ok } from '@gerard2p/mce/console';
+import { bool, enumeration, Parsed } from '@gerard2p/mce';
+import { targetPath, cliPath } from '@gerard2p/mce/paths';
+import { spin } from '@gerard2p/mce/spinner';
 import { promisify } from 'util';
 import { configuration } from '../utilities/configurations';
 import { posix, basename, dirname, join } from 'path';

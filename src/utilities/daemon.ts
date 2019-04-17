@@ -1,6 +1,6 @@
 import { watch } from 'chokidar';
-import { cliPath } from '@bitsun/mce/paths';
-import { rawSpawn } from '@bitsun/mce/spawn';
+import { cliPath, targetPath } from '@gerard2p/mce/paths';
+import { rawSpawn } from '@gerard2p/mce/spawn';
 import { livereload } from './livereload';
 
 export function StartServer(args, opt) {
@@ -14,7 +14,7 @@ export function StartServer(args, opt) {
 	let server = rawSpawn(program, argv, {
 		env: {
 			PATH: process.env.PATH,
-			HOME:'',
+			HOME: targetPath(''),
 			KAENCLI: 'true',
 			DEBUG: opt.debug,
 			NODE_ENV: opt.env,
@@ -51,8 +51,8 @@ export function StartServer(args, opt) {
 		console.log('==========');
 	});
 	server.on('exit', (code: number, signal: string) => {
-		let shouldExit = (code === 1 && signal === null) || (code === null && signal === 'SIGTERM');
-		if (shouldExit) process.kill(0);
+		let shouldExit = (code === 0 && signal === null) || (code === null && signal === 'SIGTERM');
+		if (shouldExit) process.exit(code);
 	});
 	process.on('SIGINT', code => {
 		process.exit(0);

@@ -1,6 +1,6 @@
 import { configuration } from './configurations';
 import { readFileSync, writeFileSync } from 'fs';
-import { ok } from '@bitsun/mce/console';
+import { ok } from '@gerard2p/mce/console';
 export function host_location() {
 	const os = require('os');
 	let hostsdlocation = '';

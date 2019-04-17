@@ -1,4 +1,4 @@
-import { targetPath } from '@bitsun/mce/paths';
+import { targetPath } from '@gerard2p/mce/paths';
 let configuration;
 try {
 	process.env.KAENCLI = 'true';

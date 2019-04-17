@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { ok } from '@bitsun/mce/console';
-import { bool, Parsed } from '@bitsun/mce';
+import { ok } from '@gerard2p/mce/console';
+import { bool, Parsed } from '@gerard2p/mce';
 import { host_location } from '../utilities/hosts';
 export let description = 'A description for your command';
 export let args = '[host...]';

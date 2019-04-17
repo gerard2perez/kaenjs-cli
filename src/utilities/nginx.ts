@@ -1,10 +1,10 @@
 import { configuration } from './configurations';
 import { join } from 'path';
-import { spawn } from '@bitsun/mce/spawn';
+import { spawn } from '@gerard2p/mce/spawn';
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
-import { cliPath } from '@bitsun/mce/paths';
-import { render } from '@bitsun/mce/render';
-import { ok, error } from '@bitsun/mce/console';
+import { cliPath } from '@gerard2p/mce/paths';
+import { render } from '@gerard2p/mce/render';
+import { ok, error } from '@gerard2p/mce/console';
 
 let nginxpath: string;
 export async function getnginxpath() {

@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { Parsed } from '@bitsun/mce';
-import { targetPath } from '@bitsun/mce/paths';
+import { Parsed } from '@gerard2p/mce';
+import { targetPath } from '@gerard2p/mce/paths';
 import { inflector } from '../utilities/inflector';
 export let description = 'mode=[page|component]';
 export let args = '<mode> [pages...]';

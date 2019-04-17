@@ -1,4 +1,4 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@bitsun/mce';
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce';
 export let description = 'A description for your command';
 export let args = '<arg1> [varidac...]';
 export let options = {

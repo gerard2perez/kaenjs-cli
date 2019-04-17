@@ -19,7 +19,7 @@
     "node": ">= 10.4.1"
   },
   "dependencies": {
-    "@bitsun/vault-orm": "file:c:/Development/@bitsun/vault-orm",
+    "@gerard2p/vault-orm": "file:c:/Development/@gerard2p/vault-orm",
     "@kaenjs/body-parser": "file:c:/Development/@kaenjs/body-parser",
     "@kaenjs/core": "file:c:/Development/@kaenjs/core",
     "@kaenjs/localization": "file:c:/Development/@kaenjs/localization",
