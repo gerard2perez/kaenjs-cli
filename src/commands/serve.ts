@@ -27,13 +27,12 @@ function loadRoutes() {
 	} else {
 		require(targetPath('./routes'));
 	}
+	require(targetPath('./node_modules/@kaenjs/router')).Routes();
 }
 async function registerHosts() {
-	loadRoutes();
 	const {Router} = require(targetPath('node_modules/@kaenjs/router'));
 	const {host} = configuration.server;
 	let targets = Router.subdomains.map(s=>`${s}.${host}`);
-	console.log(targets);
 	let hosts = (await redbird.get('hosts/')).data;
 	targets.push(host);
 	for(const target of targets) {
@@ -49,7 +48,7 @@ async function registerHosts() {
 	}
 }
 async function registerProxy({key, cert}) {
-	loadRoutes();
+
 	const {Router} = require(targetPath('node_modules/@kaenjs/router'));
 	let proxies = await (await redbird.get('proxy/')).data;
 	let source = `127.0.0.1:${configuration.server.port}`;
@@ -80,8 +79,11 @@ export async function action(program: string, opt: Parsed<typeof options>) {
 	let file = program || 'server.ts';
 	args.push(`src/${file}`);
 	try{
+		loadRoutes();
 		await registerHosts();
 		await registerProxy(configuration.server.https || {});
-	}catch(ex) {}
+	}catch(ex) {
+		console.log(ex);
+	}
     StartServer(args, opt);
 }
