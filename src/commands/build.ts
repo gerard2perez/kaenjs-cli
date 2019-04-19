@@ -1,6 +1,6 @@
 import { Parsed, text } from '@gerard2p/mce';
 import { error, ok } from '@gerard2p/mce/console';
-import { cp, printRelativePath, targetPath } from '@gerard2p/mce/utils';
+import { cp, printRelativePath, targetPath, spinSpawn } from '@gerard2p/mce/utils';
 import * as fb from 'fast-glob';
 import { existsSync, mkdirSync, readFile, writeFile } from 'fs';
 import { dirname, posix } from 'path';
@@ -14,6 +14,8 @@ export let options = {
 
 };
 export async function action(opt:Parsed<typeof options>) {
+	await spinSpawn('Compiling', 'npx', ['tsc', '-b', opt.config]);
+	await spinSpawn('Resources', 'kn', ['resources']);
 	let { compilerOptions:{outDir} } = require(targetPath(opt.config));
 	let res = await fb<string>(`${outDir}/**/*.js`);
 	for(const asset of await fb<string>(posix.join('public', '**', '*.*'))) {
