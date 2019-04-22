@@ -1,3 +1,4 @@
+import * as fb from 'fast-glob';
 import { fail } from 'assert';
 import { existsSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'fs';
 import { ok } from '@gerard2p/mce/console';
@@ -13,11 +14,16 @@ const loader = l => cliPath('node_modules', l);
 // const styleLoader = l => cliPath('node_modules',l);
 let MiniCssExtractPlugin;
 let FaviconsWebpackPlugin;
+let TerserJSPlugin;
+let OptimizeCSSAssetsPlugin;
 // export let args = '<arg1> [varidac...]';
 function wpc(mode: string, name: string = '', base: string = '') {
 	let js = {
 		mode,
-		devtool: 'inline-source-map',
+		optimization: {
+			minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+		},
+		devtool: mode==='production'?undefined:'inline-source-map',
 		output: {
 			library: configuration.server.name,
 			path: targetPath('public/js'),
@@ -41,6 +47,9 @@ function wpc(mode: string, name: string = '', base: string = '') {
 	};
 	let engine = {
 		mode,
+		optimization: {
+			minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+		},
 		output: {
 			library: configuration.server.name,
 			path: targetPath('public/img'),
@@ -123,7 +132,10 @@ function wpc(mode: string, name: string = '', base: string = '') {
 	};
 	let css = {
 		mode,
-		devtool: 'inline-source-map',
+		optimization: {
+			minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+		},
+		devtool: mode==='production'?undefined:'inline-source-map',
 		output: {
 			library: configuration.server.name,
 			path: targetPath(`public/${base}`),
@@ -199,14 +211,16 @@ function wpc(mode: string, name: string = '', base: string = '') {
 				},
 				{
 					test: /\.css$/,
-					use: [MiniCssExtractPlugin.loader, loader('css-loader')]
+					use: [
+						MiniCssExtractPlugin.loader,
+						loader('css-loader')]
 				}
 			]
 		},
 		plugins: [
 			new MiniCssExtractPlugin({
 				filename: `${name}.css`,
-				chunkFilename: '[id].css'
+				chunkFilename: '[id]-[integrity].css'
 			})
 		]
 	};
@@ -228,6 +242,8 @@ export async function action(opt: Parsed<typeof options>) {
 	const webpack = load('webpack');
 	MiniCssExtractPlugin = load("mini-css-extract-plugin");
 	FaviconsWebpackPlugin = load("favicons-webpack-plugin");
+	OptimizeCSSAssetsPlugin = load('optimize-css-assets-webpack-plugin');
+	TerserJSPlugin = load('terser-webpack-plugin');
 	let bundles = Object.keys(configuration.bundles || {});
 	let watchers = [];
 	let posibleIgnores:string[] = [];
@@ -296,12 +312,8 @@ export async function action(opt: Parsed<typeof options>) {
 		await Promise.all(promises);
 	});
 	await spin('Cleaning', async () => {
-	    if (existsSync(targetPath('public/css/.___ignore_me___'))) unlinkSync(targetPath('public/css/.___ignore_me___'));
-	    if (existsSync(targetPath('public/img/.___ignore_me___')))unlinkSync(targetPath('public/img/.___ignore_me___'));
-	    if (existsSync(targetPath('public/.___ignore_me___')))unlinkSync(targetPath('public/.___ignore_me___'));
-	    for(const dir of posibleIgnores) {
-	        // console.log(`${dir}.___ignore_me___`);
-	        if (existsSync(targetPath(`${dir}.___ignore_me___`)))unlinkSync(targetPath(`${dir}.___ignore_me___`));
+		for(let must_remove of await fb<string>(targetPath('public/**/.___ignore_me___')) ) {
+			unlinkSync(must_remove);
 		}
 	});
 	return watchers;
