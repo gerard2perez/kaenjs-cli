@@ -1,3 +1,3 @@
 import { Related, List, Property, HasMany, HasOne, BelongsTo } from '@gerard2p/vault-orm/types';
-export class {{cname}} extends Model {
+export class {{cname}} extends Repository {
 }

@@ -60,8 +60,8 @@ export async function action(name:string, opt:Parsed<typeof options>) {
 	}
 	let ModelText = readFileSync(model_path, 'utf-8');
     let ContextText = readFileSync(context_path, 'utf-8');
-    if ( /import \{ Model \} from 'vault\-orm\/adapters\/.*';/.exec(ModelText) === null) {
-        ModelText = ModelText.replace(/.*import(.*)types';\n/, `import$1types';\nimport { Model } from '@gerard2p/vault-orm/adapters/${opt.driver}';\n`)
+    if ( /import \{ Repository \} from 'vault\-orm\/adapters\/.*';/.exec(ModelText) === null) {
+        ModelText = ModelText.replace(/.*import(.*)types';\n/, `import$1types';\nimport { Repository } from '@gerard2p/vault-orm/adapters/${opt.driver}';\n`)
     }
     for(let [property, kind] of fields) {
         let declregexp = new RegExp(`${property}:${kind}`);
@@ -98,7 +98,7 @@ export async function action(name:string, opt:Parsed<typeof options>) {
                     break;
 			}
 			if(primitive) {
-            	ModelText = ModelText.replace(/(.*)extends Model(.*){\n/, `$1extends Model {\n\t${decorator} ${Property}:${primitive}\n`)
+            	ModelText = ModelText.replace(/(.*)extends Repository(.*){\n/, `$1extends Repository {\n\t${decorator} ${Property}:${primitive}\n`)
 				if(model_updated === States.no) model_updated = States.updated;
 			}
         }
