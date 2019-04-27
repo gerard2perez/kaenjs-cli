@@ -35,8 +35,8 @@ function wpc(mode: string, name: string = '', base: string = '') {
 		module: {
 			rules: [
 				{
-					test: /\.[js|ts|tsx]$/,
-					use: 'ts-loader',
+					test: /\.ts$/,
+					use: loader('ts-loader'),
 					exclude: /node_modules/
 				}
 			]

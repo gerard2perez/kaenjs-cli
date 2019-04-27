@@ -10,8 +10,6 @@ import { targetPath, cliPath } from '@gerard2p/mce/paths';
 import { spin } from '@gerard2p/mce/spinner';
 import { configuration } from '../utilities/configurations';
 import { Languages } from '../utilities/languages';
-
-
 const { server:{localization:{directory} } = {localization:{directory:''}} } = configuration;
 export let description = 'A description for your command';
 export let args = '[from]';
@@ -96,12 +94,14 @@ export async function action(from: string, opt: Parsed<typeof options>) {
 				writeFileSync(targetPath(opt.filePath, `${to}.json`), JSON.stringify(translated, null, 4));
 				ok(targetPath(opt.filePath, `${to}.json`));
 			} catch (ex) {
-				fail(to);
 				console.log(ex);
+				fail(to);
 			}
 		}
 		translation.__lang__ = lang_name;
 		writeFileSync(targetPath(opt.filePath, `${from}.json`), JSON.stringify(translation, null, 4));
+		createHash(targetPath(opt.filePath, `${from}.json`));
+
 	});
 }
 function deleteObjectKeys(object:any, object_key:any) {
@@ -119,7 +119,25 @@ function deleteObjectKeys(object:any, object_key:any) {
 	}
 	return total;
 }
+function createHash(source:string) {
+	return new Promise(resolve=>{
+		var fs = require('fs');
+		var crypto = require('crypto');
 
+		// the file you want to get the hash
+		var fd = fs.createReadStream(source);
+		var hash = crypto.createHash('sha1');
+		hash.setEncoding('hex');
+
+		fd.on('end', function() {
+			hash.end();
+			resolve(hash.read());
+		});
+
+		// read all file and pipe it (write it) to the hash object
+		fd.pipe(hash);
+	});
+}
 async function translateObject(entry:any, from:string, to:string, target:any= {}) {
 	let translated:any = Object.assign({}, target);
 	for(const key of Object.keys(entry) ) {
@@ -144,7 +162,7 @@ async function translateObject(entry:any, from:string, to:string, target:any= {}
 }
 async function translate(value:string, {from, to}:{from:string, to:string}): Promise<{text:string}> {
 	// return {text: 'newTranslation'};
-	return axios.post('https://translation.googleapis.com/language/translate/v2?key=AIzaSyDfCXhrZ8LJ7tQ9sZF_dgNYKXO1zESb6jU', {
+	return axios.post('https://translation.googleapis.com/language/translate/v2?key=AIzaSyAyfLSfkWmzlpxdgdtxcry6j0feZm8FoEw', {
 		q:value,
 		source: from,
 		target: to,

@@ -1,9 +1,9 @@
 import { targetPath } from '@gerard2p/mce/paths';
-import { readdirSync } from 'fs';
+import { readdirSync, existsSync } from 'fs';
 // let configuration;
 // try {
-	process.env.KAENCLI = 'true';
-	require('ts-node/register');
+process.env.KAENCLI = 'true';
+require('ts-node/register');
 // 	configuration = require(targetPath('node_modules/@kaenjs/core/configuration')).configuration;
 // } catch (ex) {
 // 	console.log(ex);
@@ -12,9 +12,9 @@ import { readdirSync } from 'fs';
 // export { configuration };
 
 class DevProdConfig {
-	[key:string] : any
-	constructor(lib:object) {
-		for(const key of Object.getOwnPropertyNames(lib) ) {
+	[key: string]: any;
+	constructor(lib: object) {
+		for (const key of Object.getOwnPropertyNames(lib)) {
 			this[key] = this.DeepDevOrProd(lib, key);
 		}
 	}
@@ -27,11 +27,11 @@ class DevProdConfig {
 	 * @param {string} prop the property to look at
 	 * @example {a:{dev:0,prod:1}} if NODE_ENV = 'productoin' -> {a:1}
 	 */
-	DeepDevOrProd (object:object, prop:string) {
+	DeepDevOrProd(object: object, prop: string) {
 		let target = object[prop];
 		if (target instanceof Array) {
 			return target;
-		} else if (typeof target === 'object' && Object.keys(target).indexOf('dev') === -1 ) {
+		} else if (typeof target === 'object' && Object.keys(target).indexOf('dev') === -1) {
 			let newobj = {};
 			for (const deep of Object.keys(target)) {
 				newobj[deep] = this.DeepDevOrProd(object[prop], deep);
@@ -41,37 +41,39 @@ class DevProdConfig {
 		if (Object.keys(target).indexOf('dev') === -1) {
 			return target;
 		} else {
-			return process.env.NODE_ENV === 'production' ? /* istanbul ignore next */ target.prod : target.dev;
+			return process.env.NODE_ENV === 'production'
+				? /* istanbul ignore next */ target.prod
+				: target.dev;
 		}
 	}
 }
 class Configuration {
-	environment:string
-	bundles:object = {};
-	conections:object = {};
+	environment: string;
+	bundles: object = {};
+	conections: object = {};
 	inflections = {
 		plural: [],
 		singular: []
 	};
 	// authentication:any = {};
-	server:any = {};
-	static:object = {};
-	views:object = {};
-	constructor () {
-		this.environment = process.env.NODE_ENV === 'production' ? 'production':'development';
-		for(const file of readdirSync(targetPath('src','configuration'))) {
+	server: any = {localization:{directory:''}};
+	static: object = {};
+	views: object = {};
+	constructor() {
+		this.environment = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+		if(existsSync(targetPath('src', 'configuration')))
+		for (const file of readdirSync(targetPath('src', 'configuration'))) {
 			try {
-				if(file.includes('authentication'))continue;
-			if(/.*\.map$/.exec(file) === null) {
-				let [lib] = file.split('.');
-				let config = require( targetPath('src','configuration', file)).default;
-				this[lib] = new DevProdConfig(config);
+				if (file.includes('authentication')) continue;
+				if (/.*\.map$/.exec(file) === null) {
+					let [lib] = file.split('.');
+					let config = require(targetPath('src', 'configuration', file)).default;
+					this[lib] = new DevProdConfig(config);
+				}
+			} catch (ex) {
+				console.log(ex);
 			}
-		}catch(ex) {
-			console.log(ex);
 		}
-		}
-		this.server.subdomains = this.server.subdomains || [];
 	}
 }
 const configuration = new Configuration();
