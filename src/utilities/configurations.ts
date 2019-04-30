@@ -56,7 +56,7 @@ class Configuration {
 		singular: []
 	};
 	// authentication:any = {};
-	server: any = {localization:{directory:''}};
+	server: any = {localization:{directory:''}, name:''};
 	static: object = {};
 	views: object = {};
 	constructor() {

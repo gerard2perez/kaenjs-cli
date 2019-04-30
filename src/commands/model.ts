@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { bool, collect, Parsed, text } from '@gerard2p/mce';
+import { bool, collect, Parsed, text, list } from '@gerard2p/mce';
 import { cliPath, targetPath } from '@gerard2p/mce/paths';
 import { render } from '@gerard2p/mce/render';
 import { created, updated } from '@gerard2p/mce/utils';
@@ -34,7 +34,7 @@ export let options = {
     driver: text('-d <driver>', 'Select the driver to connect',valid_drivers, 'mongo'),
     context: text('-c <context>', 'Context where the model will be added', `${inflector.capitalize(appName)}Context`),
     db: text('<host:database:port>', 'Database and Port to connect',/^.*\:[0-9]*$/, `localhost:${appName}_db:27017`),
-    fields: collect('-f <field>', `[repetable] Field name and configuration. (name:[${valid_fields}])`, files_validation, [])
+    fields: list('-f <field>', `[repetable] Field name and configuration. (name:[${valid_fields}])`, files_validation, [])
 };
 export async function action(name:string, opt:Parsed<typeof options>) {
     let cname = inflector.capitalize(name);
@@ -59,12 +59,12 @@ export async function action(name:string, opt:Parsed<typeof options>) {
         render(cliPath('templates/models/model.ts.tmp'), {cname, host, database, port, context}, model_path);
 	}
 	let ModelText = readFileSync(model_path, 'utf-8');
-    let ContextText = readFileSync(context_path, 'utf-8');
-    if ( /import \{ Repository \} from 'vault\-orm\/adapters\/.*';/.exec(ModelText) === null) {
+	let ContextText = readFileSync(context_path, 'utf-8');
+    if ( /import \{ Repository \} from '@gerard2p\/vault\-orm\/adapters\/.*';/.exec(ModelText) === null) {
         ModelText = ModelText.replace(/.*import(.*)types';\n/, `import$1types';\nimport { Repository } from '@gerard2p/vault-orm/adapters/${opt.driver}';\n`)
     }
     for(let [property, kind] of fields) {
-        let declregexp = new RegExp(`${property}:${kind}`);
+        let declregexp = new RegExp(` ${property}:${kind}`);
         if ( !declregexp.exec(ModelText) ) {
             let model = inflector.capitalize(property);
             let decorator = '@Property';
@@ -109,6 +109,13 @@ export async function action(name:string, opt:Parsed<typeof options>) {
     }
     if ( new RegExp(`import.*${cname}.*`).exec(ContextText) === null) {
         ContextText = ContextText.replace(new RegExp(`import(.*)VaultORM(.*)\n`), `import$1VaultORM$2\nimport { ${cname} } from './${name.toLowerCase()}';\n`);
+	}
+	if ( new RegExp(`export.*${cname}.*`).exec(ContextText) === null) {
+		console.log('insert export')
+        ContextText = ContextText.replace(
+			new RegExp(`export +\{ +(.*) +\};`),
+			`export { $1, ${cname} };`
+			);
     }
     if ( !new RegExp(` Collection<${cname}>`).exec(ContextText) ) {
         ContextText = ContextText.replace(/VaultORM {\n/, `VaultORM {\n\t@collection(${cname}) ${inflector.pluralize(name)}: Collection<${cname}>\n`)
