@@ -4,9 +4,10 @@ import { Views } from '@kaenjs/views';
 import { BodyParser } from '@kaenjs/body-parser';
 import { Passport, Session } from '@kaenjs/passport';
 import {StaticContent} from '@kaenjs/static';
-import { Routes, Router } from '@kaenjs/router';
+import { Routes, Router, Subdomains } from '@kaenjs/router';
 import { Databases, Seed } from '@kaenjs/vault-orm';
 new KaenServer()
+	.add(Subdomains('www'))
 	.add(StaticContent())
 	.add(BodyParser({
 		files: ['image/png', 'image/jpg', 'image/jpeg']
