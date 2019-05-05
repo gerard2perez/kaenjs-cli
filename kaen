@@ -1,10 +1,4 @@
 #!/usr/bin/env node
 process.env.NODE_ENV = process.argv.indexOf('-p') > -1 || process.argv.indexOf('--production') > -1 ? 'production' : 'development';
-process.env.MCE_DEV = 'true';
-if (process.env.MCE_DEV) {
-	require('./cli');
-	// require(require('path').posix.resolve(__dirname, 'node_modules', 'ts-node', 'register'));
-	// require('./src/cli');
-} else {
-	require('./cli');
-}
+// process.env.KAEN_DEV = 'true';
+require('./cli');
