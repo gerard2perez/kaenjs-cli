@@ -58,7 +58,11 @@ export async function action(application:string, opt:Parsed<typeof options>) {
 		copy('.gitignore.tmp', '.gitignore');
 		copy('tsconfig.json');
 		copy('tsconfig.dist.json');
-		compile('package.json.tmp', {application}, 'package.json');
+		if(process.env.MCE_DEV==='true') {
+			compile('package.dev.json', {application}, 'package.json');
+		} else {
+			compile('package.prod.json', {application}, 'package.json');
+		}
 		// Source Files
 		mkdir('src');
 		copy('src/server.ts');

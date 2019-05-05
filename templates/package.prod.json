@@ -1,0 +1,41 @@
+{
+  "name": "{{application}}",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha test/**/*.test.ts",
+    "start": "node server.js"
+  },
+  "files": [
+    "**/*.js",
+    "!**/*.js.map",
+    "LICENSE",
+    "!src/"
+  ],
+  "engines": {
+    "node": ">= 10.4.1"
+  },
+  "dependencies": {
+    "@gerard2p/vault-orm": "0.4.6",
+    "@kaenjs/body-parser": "0.0.1",
+    "@kaenjs/core": "0.0.1",
+    "@kaenjs/localization": "0.0.1",
+    "@kaenjs/passport": "0.0.2",
+    "@kaenjs/rest": "0.2.0",
+    "@kaenjs/router": "0.2.0",
+    "@kaenjs/static": "0.0.1",
+    "@kaenjs/vault-orm": "0.0.2",
+    "@kaenjs/views": "0.0.1",
+    "@kaenjs/angular": "0.2.0",
+    "@kaenjs/cli": "0.2.1",
+    "@gerard2p/mce": "1.2.3"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.1.22",
+    "@types/node": "^11.12.2",
+    "typescript": "^3.4.1"
+  }
+}

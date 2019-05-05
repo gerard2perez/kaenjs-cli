@@ -9,3 +9,4 @@ coverage
 *.srl
 package.dist.json
 .npmrc
+*.dev.json
