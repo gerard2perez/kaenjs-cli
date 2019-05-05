@@ -30,7 +30,8 @@
     "@kaenjs/vault-orm": "0.0.2",
     "@kaenjs/views": "0.0.1",
     "@kaenjs/angular": "0.2.0",
-    "@gerard2p/mce": "1.2.3"
+    "@gerard2p/mce": "1.2.3",
+    "@kaenjs/cli": "0.2.4"
   },
   "devDependencies": {
     "@types/mongodb": "^3.1.22",
