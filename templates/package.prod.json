@@ -30,7 +30,7 @@
     "@kaenjs/vault-orm": "0.0.2",
     "@kaenjs/views": "0.0.1",
     "@kaenjs/angular": "0.2.0",
-    "@kaenjs/cli": "0.2.1",
+    "@kaenjs/cli": "0.2.2",
     "@gerard2p/mce": "1.2.3"
   },
   "devDependencies": {
