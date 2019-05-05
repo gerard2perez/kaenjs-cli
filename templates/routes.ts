@@ -1,6 +1,6 @@
 import { Router, RouterOptions } from '@kaenjs/router';
 
-const router = new Router();
+const router = new Router('www');
 
 router.get('/', 'index.html');
 
