@@ -4,7 +4,7 @@ export default {
 	subdomainOffset: 3,
 	port: 62626,
 	host: {
-		dev:'localhost',
+		dev:'{{application}}.loc',
 		prod: '{{application}}.com'
 	},
 	https: {

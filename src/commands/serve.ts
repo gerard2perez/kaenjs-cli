@@ -25,7 +25,7 @@ function loadRoutes() {
 			}
 		}
 	} else {
-		require(targetPath('./routes'));
+		require(targetPath('./src/routes'));
 	}
 	require(targetPath('./node_modules/@kaenjs/router')).Routes();
 }
