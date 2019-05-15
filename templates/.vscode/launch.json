@@ -8,7 +8,7 @@
         "serve",
         "-a",
         "--debug",
-        "kaen:* kaen"
+        "kn:* kn"
       ],
       "runtimeExecutable": "kn",
       "console": "integratedTerminal",
