@@ -9,7 +9,7 @@ import { inflector } from '../utilities/inflector';
 let {server:{name} = {name:''} } = configuration;
 let appName = name;
 export let description = 'Creates a new model';
-export let args = '<name>';
+export let args = '<context> <model>';
 enum States {
     no,
     updated,
@@ -32,21 +32,21 @@ let files_validation = new RegExp(`^.*:(${valid_fields})(:.*)?`);
 export let options = {
     force: bool('', 'rebuilds the file'),
     driver: text('-d <driver>', 'Select the driver to connect',valid_drivers, 'mongo'),
-    context: text('-c <context>', 'Context where the model will be added', `${inflector.capitalize(appName)}Context`),
+    // context: text('-c <context>', 'Context where the model will be added', `${inflector.capitalize(appName)}Context`),
     db: text('<host:database:port>', 'Database and Port to connect',/^.*\:[0-9]*$/, `localhost:${appName}_db:27017`),
     fields: list('-f <field>', `[repetable] Field name and configuration. (name:[${valid_fields}])`, files_validation, [])
 };
-export async function action(name:string, opt:Parsed<typeof options>) {
-    let cname = inflector.capitalize(name);
+export async function action(context:string, model:string, opt:Parsed<typeof options>) {
+    let cname = inflector.capitalize(model);
     let [host, database, port] = opt.db.split(':');
-    let {context} = opt;
+    // let {context} = opt;
     let l_context = context.toLowerCase();
     let fields = opt.fields.map(f=>f.split(':')).reverse();
     if ( !existsSync(targetPath('src/models', l_context)) ) {
         mkdirSync(targetPath('src/models', l_context));
         created(targetPath('src/models', l_context));
     }
-    let model_path = targetPath('src/models', l_context, `${name.toLowerCase()}.ts`);
+    let model_path = targetPath('src/models', l_context, `${model.toLowerCase()}.ts`);
     let context_path = targetPath('src/models', l_context, 'index.ts');
     let context_updated = States.no;
     let model_updated = States.no;
@@ -108,17 +108,16 @@ export async function action(name:string, opt:Parsed<typeof options>) {
         ContextText = `import { VaultORM, Collection, RelationMode, collection } from '@gerard2p/vault-orm/adapters/${opt.driver}';\n` + ContextText;
     }
     if ( new RegExp(`import.*${cname}.*`).exec(ContextText) === null) {
-        ContextText = ContextText.replace(new RegExp(`import(.*)VaultORM(.*)\n`), `import$1VaultORM$2\nimport { ${cname} } from './${name.toLowerCase()}';\n`);
+        ContextText = ContextText.replace(new RegExp(`import(.*)VaultORM(.*)\n`), `import$1VaultORM$2\nimport { ${cname} } from './${model.toLowerCase()}';\n`);
 	}
 	if ( new RegExp(`export.*${cname}.*`).exec(ContextText) === null) {
-		console.log('insert export')
         ContextText = ContextText.replace(
 			new RegExp(`export +\{ +(.*) +\};`),
 			`export { $1, ${cname} };`
 			);
     }
     if ( !new RegExp(` Collection<${cname}>`).exec(ContextText) ) {
-        ContextText = ContextText.replace(/VaultORM {\n/, `VaultORM {\n\t@collection(${cname}) ${inflector.pluralize(name)}: Collection<${cname}>\n`)
+        ContextText = ContextText.replace(/VaultORM {\n/, `VaultORM {\n\t@collection(${cname}) ${inflector.pluralize(model)}: Collection<${cname}>\n`)
         if(context_updated === States.no) context_updated = States.updated;1
     }
     writeFileSync(context_path, ContextText);
