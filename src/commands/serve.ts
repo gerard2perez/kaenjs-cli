@@ -2,9 +2,10 @@ import { bool, enumeration, numeric, Parsed, text } from '@gerard2p/mce';
 import { StartServer } from '../utilities/daemon';
 import axios from 'axios';
 import { configuration } from '../utilities/configurations';
-import { ok } from '@gerard2p/mce/console';
+import { ok, info } from '@gerard2p/mce/console';
 import { targetPath } from '@gerard2p/mce/paths';
 import { existsSync, readdirSync, statSync } from 'fs';
+import { MainSpinner } from '@gerard2p/mce/spinner';
 export let description = 'Start the server in watch mode.\n      To lauch in production use "node server\n      [proram=server]"';
 export let args = '[program]';
 export let options = {
@@ -34,27 +35,39 @@ async function registerHosts() {
 	const {host} = configuration.server;
 	let targets = Router.subdomains.map(s=>`${s}.${host}`);
 	let hosts = (await redbird.get('hosts/')).data;
-	targets.push(host);
+	let hosts_file_ok=true;
 	for(const target of targets) {
 		if(!hosts[target]) {
 			let res = await redbird.post('hosts/',{
 				source: '127.0.0.1',
 				target
 			});
+			hosts_file_ok = res.status === 201;
 			if(res.status === 201) {
 				ok(`domain ${target} registered on @gerard2p/redbird`);
 			}
 		}
 	}
+	if(hosts_file_ok)MainSpinner.info(`Hosts file is ok`);
+}
+async function kn_redbird() {
+	let {status, data} = await redbird.get('/');
+	if(status === 200) {
+		MainSpinner.info(`using kaen-redbird: ${data.version}`);
+		MainSpinner.info(`using redbird: ${data.redbird}`);
+		return true;
+	}
+	return false;
 }
 async function registerProxy({key, cert}) {
 
 	const {Router} = require(targetPath('node_modules/@kaenjs/router'));
 	let proxies = await (await redbird.get('proxy/')).data;
-	let source = `127.0.0.1:${configuration.server.port}`;
+	let {port} = configuration.server;
+	let source = `127.0.0.1:${port}`;
+	let por
 	const {host} = configuration.server;
 	let targets = Router.subdomains.map(s=>`${s}.${host}`);
-	console.log(targets);
 	let options = undefined;
 	if(key && cert) {
 		source = `https://${source}`;
@@ -67,11 +80,36 @@ async function registerProxy({key, cert}) {
 		target: targets
 	};
 	if(options)body.options = options;
-	if(!proxies[source]) {
+	let proxy_exists = !!proxies[source];
+	if(proxy_exists) {
+		let proxy_count = proxies[source].host.filter(h=>targets.includes(h)).length;
+		if(proxy_count === 0) {
+			let ports = Object.keys(proxies).map(k=>parseInt(k.split(':')[2])).sort().filter(p=>p>port);
+			let tryport:number = port;
+			while(ports.includes(++tryport));
+			MainSpinner.warn(`Cannot serve app on port $port}, other app is registerd: ${proxies[source].host.join(',')}`)
+			MainSpinner.warn(`Try with port: ${tryport}`);
+			return false;
+		} else {
+			let {status} = await redbird.put('proxy/', body);
+			proxy_exists = status === 200;
+			if(proxy_exists) {
+				MainSpinner.info('Reverse Proxy updated');
+			} else {
+				MainSpinner.warn('Reverse Proxy not updated');
+				return false;
+			}
+		}
+	} else {
 		let {status} = await (redbird.post('proxy/', body));
-		if(status === 201)
+		if(status === 201) {
 			ok('Reverse Proxy Created on @gerard2p/redbird');
+		} else {
+			MainSpinner.error('Reverse proxy not created');
+			return false;
+		}
 	}
+	return true;
 }
 export async function action(program: string, opt: Parsed<typeof options>) {
     let args = [];
@@ -80,10 +118,14 @@ export async function action(program: string, opt: Parsed<typeof options>) {
 	args.push(`src/${file}`);
 	try{
 		loadRoutes();
-		await registerHosts();
-		await registerProxy(configuration.server.https || {});
+		if ( await kn_redbird() ) {
+			await registerHosts();
+			if(!await registerProxy(configuration.server.https || {}) )
+			return false;
+		}
+
 	}catch(ex) {
-		console.log(ex);
+		// console.log(ex);
 	}
     StartServer(args, opt);
 }
