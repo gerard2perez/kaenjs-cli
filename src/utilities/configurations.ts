@@ -1,15 +1,9 @@
 import { targetPath } from '@gerard2p/mce/paths';
-import { readdirSync, existsSync } from 'fs';
-// let configuration;
-// try {
+import { existsSync, readdirSync } from 'fs';
 process.env.KAENCLI = 'true';
-require('ts-node/register');
-// 	configuration = require(targetPath('node_modules/@kaenjs/core/configuration')).configuration;
-// } catch (ex) {
-// 	console.log(ex);
-// 	configuration = {};
-// }
-// export { configuration };
+require('ts-node').register({
+	transpileOnly:true,
+});
 
 class DevProdConfig {
 	[key: string]: any;
@@ -67,8 +61,15 @@ class Configuration {
 				if (file.includes('authentication')) continue;
 				if (/.*\.map$/.exec(file) === null) {
 					let [lib] = file.split('.');
-					let config = require(targetPath('src', 'configuration', file)).default;
+					let file_module = targetPath('src', 'configuration', file);
+					// let input = readFileSync(file_module, 'utf-8');
+					// let output = transpileModule(input,{ fileName: file_module }).outputText;
+					// let compiled_file = file_module.replace('.ts', '.js');
+					// writeFileSync(compiled_file, output);
+					// let config = require(compiled_file).default;
+					let config = require(file_module).default;
 					this[lib] = new DevProdConfig(config);
+
 				}
 			} catch (ex) {
 				console.log(ex);
@@ -78,3 +79,4 @@ class Configuration {
 }
 const configuration = new Configuration();
 export { configuration };
+
