@@ -14,5 +14,4 @@ export async function action(opt:Parsed<typeof options>) {
         await persisConfiguration(conf);
         await restartNginx();
     }
-
 }
