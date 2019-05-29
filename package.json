@@ -2,7 +2,7 @@
   "name": "@kaenjs/cli",
   "version": "0.0.0",
   "description": "",
-  "main": "./kaen",
+  "main": "./index.js",
   "bin": {
     "kn": "./kaen"
   },
