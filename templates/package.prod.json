@@ -23,13 +23,14 @@
     "@kaenjs/body-parser": "0.0.2",
     "@kaenjs/core": "0.0.2",
     "@kaenjs/localization": "0.0.2",
+    "@kaenjs/session": "0.0.0",
     "@kaenjs/passport": "0.0.3",
-    "@kaenjs/rest": "0.2.1",
-    "@kaenjs/router": "0.2.1",
+    "@kaenjs/rest": "0.3.0",
+    "@kaenjs/router": "0.3.0",
     "@kaenjs/static": "0.0.2",
     "@kaenjs/vault-orm": "0.0.3",
     "@kaenjs/views": "0.0.2",
-    "@kaenjs/angular": "0.2.1",
+    "@kaenjs/angular": "0.3.0",
     "@gerard2p/mce": "1.2.3"
   },
   "devDependencies": {

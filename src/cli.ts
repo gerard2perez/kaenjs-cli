@@ -1,4 +1,4 @@
 import { MCE } from '@gerard2p/mce';
 MCE(__dirname)
 	.submodules('kaen.json')
-	.subcommand(process.argv).then(o=>process.exit(0));
+	.subcommand(process.argv);

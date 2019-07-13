@@ -2,8 +2,9 @@ import { KaenServer } from '@kaenjs/core';
 import { Localization } from '@kaenjs/localization';
 import { Views } from '@kaenjs/views';
 import { BodyParser } from '@kaenjs/body-parser';
-import { Passport, Session } from '@kaenjs/passport';
-import {StaticContent} from '@kaenjs/static';
+import { Passport } from '@kaenjs/passport';
+import { Session } from '@kaenjs/session';
+import { StaticContent } from '@kaenjs/static';
 import { Routes, Router, Subdomains } from '@kaenjs/router';
 import { Databases, Seed } from '@kaenjs/vault-orm';
 new KaenServer()

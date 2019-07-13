@@ -70,9 +70,7 @@ export async function action(application:string, opt:Parsed<typeof options>) {
 		mkdir('src/controllers');
 		mkdir('src/configuration');
 		compile('src/configuration/server.ts', {
-			application
-		});
-		compile('src/configuration/authentication.ts', {
+			application,
 			key1:await secret(40),
 			key2:await secret(40),
 			key3:await secret(40),
@@ -82,7 +80,11 @@ export async function action(application:string, opt:Parsed<typeof options>) {
 			key7:await secret(40),
 			key8:await secret(40)
 		});
+		compile('src/configuration/session.ts', {
+			application
+		});
 		copy('src/configuration/bundles.ts');
+		copy('src/configuration/passport.ts');
 		mkdir('src/locales');
 		mkdir('src/seeds');
 		mkdir('src/models');
