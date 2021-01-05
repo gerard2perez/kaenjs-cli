@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@gerard2p/mce": "1.3.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "chalk": "^2.4.2",
     "chokidar": "^2.1.5",
     "css-loader": "^2.1.1",
